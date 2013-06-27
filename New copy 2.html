@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Paul</title>
+
+    
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+    </head>
+    <body>
+    
+      
+        <canvas id="myCanvas" width="800" height="500"></canvas>
+        <script>
+            
+            var score = 0;
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
+            var imgBG = new Image();
+            var imgMole = new Image();
+            imgBG.onload = function() {
+                context.drawImage(imgBG, 0, 0);
+                context.drawImage(imgMole, 100, 100, 48, 80);
+            };
+            imgBG.src = 'background.png';
+            imgMole.src = 'Mole.png';
+            
+            canvas.addEventListener('mousedown', click);
+            function Update() {
+                //generates random coordinates and time
+                this.randomx = Math.random()*600 ;
+                this.randomy = 70 + Math.random()*350 ;
+                this.randomtime = Math.random*5000 ;
+                var info = [this.randomx, this.randomy, this.randomtime] ;
+                return info ;
+            }
+            
+            var xcoor = 0;
+            var ycoor = 0;
+            setInterval(loop, 1500);
+            
+            
+            function loop() {
+                //game loop that creates an image and clears it
+                var updateddata = Update();
+                draw(updateddata);
+                xcoor = updateddata[0];
+                ycoor = updateddata[1];
+                
+                
+                
+            
+            }
+            
+            function click(e) {
+                //generates coordinates of click
+                if (e.offsetX >= xcoor && e.offsetX <= xcoor + 50 && e.offsetY >= ycoor && e.offsetY <= ycoor + 45) { 
+                context.clearRect(xcoor, ycoor, xcoor + 50, ycoor + 45);
+                context.drawImage(imgBG, 0,0,800,500);
+                score ++;
+                context.fillStyle = 'white';
+                context.fillText( 'Score:' + score, 15, 15);
+            }
+                else {
+                context.fillStyle = 'white';
+                context.fillText( 'You missed!', e.offsetX, e.offsetY);
+            }
+            }
+            
+            
+            
+            function draw(Temp) {
+                //takes coordinates and draws image there
+                var x = Temp[0];
+                var y = Temp[1];
+                
+                context.clearRect(0,0,800,500) ;
+                context.drawImage(imgBG, 0, 0, 800, 500) ;
+                context.drawImage(imgMole, x, y) ;
+                
+            }
+                
+	  //http://fotobg.ru/upload/img1347871094.jpg in game background
+//http://wallpapers-diq.org/wallpapers/12/Industrial_Octane_8.jpg 
+//http://us.123rf.com/400wm/400/400/arquiplay77/arquiplay770904/arquiplay77090400071/4767327-grunge-background-of-an-interior-concrete-room.jpg	  
+//http://modblackmoon.narod.ru/wallp/MB-Sector712_HD.jpg -->
+	
+        </script>
+    </body>
+</html>

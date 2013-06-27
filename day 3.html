@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Whack-A-Mole!!!</title>
+
+    
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+    </head>
+    <body>
+    
+      
+        <canvas id="myCanvas" width="800" height="500"></canvas>
+        <script>
+            var imgBomb = new Image();
+            imgBomb.src = 'bomb.png';
+            
+            var imgEnd = new Image();
+            imgEnd.src = 'End.png';
+            var framerate = 2000;
+            var score = 0;
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
+            var imgBG = new Image();
+            var imgMole = new Image();
+            var imgChrome = new Image();
+            imgChrome.src = 'Mole2.png';
+            var imgCB = new Image();
+            imgCB.src = 'cardboard.png';
+            imgBG.onload = function() {
+                context.drawImage(imgBG, 0, 0);
+                context.drawImage(imgMole, 100, 100, 48, 80);
+            };
+            imgBG.src = 'background.png';
+            imgMole.src = 'Mole.png';
+            
+            canvas.addEventListener('mousedown', click);
+            
+            function Update() {
+                //generates random coordinates and time
+                this.randomx = Math.random()*600 ;
+                this.randomy = 70 + Math.random()*350 ;
+                this.randomtime = Math.random*5000 ;
+                var info = [1, this.randomx, this.randomy] ;
+                return info ;
+            }
+            
+            
+            function UpdateNeg() {
+                //generates random coordinates and time
+                this.randomx = Math.random()*600 ;
+                this.randomy = 70 + Math.random()*350 ;
+                this.randomtime = Math.random*5000 ;
+                var info = [-1, this.randomx, this.randomy] ;
+                return info ;
+            }
+            
+            
+            function Updateinfo() {
+                //window.alert('hello');
+                for (var i = 0; i < 3; i++) {
+                    coordinates[i] = Update();
+                    
+                }
+                coordinates[3] = UpdateNeg();
+            }
+            
+            var xcoor = 0;
+            var ycoor = 0;
+            var x1coor = 0;
+            var y1coor = 0;  
+            var x2coor = 0;
+            var y2coor = 0;
+            
+            
+            var coordinates = new Array();
+            coordinates = [[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+            
+            /*function loop() {
+                //game loop that creates an image and clears it
+                var updateddata = Update();
+                draw(updateddata);
+                xcoor = updateddata[0];
+                ycoor = updateddata[1];    
+            
+            }*/
+            var tick = 0
+            var time = 20
+            function loop() {
+                tick ++;
+                console.log(tick);
+                if (tick % time == 0) {
+                    Updateinfo();
+                    console.log(coordinates[3]);
+                    drawall();
+                }
+                time = 20 - Math.floor(score/5);
+                if (tick >= 500) {
+                    clearInterval(run);
+                    context.drawImage(imgEnd, 0,0,800,500);
+                    context.fillStyle = 'black';
+                    context.font="30px Verdana";
+                    context.fillText( 'Your score is ' + score + '!', 300, 200);
+                }
+            }
+            
+            function drawall() {
+                context.clearRect(0,0,800,500)
+                context.drawImage(imgBG, 0,0,800,500);
+                var Temp1 = coordinates[0];
+                var Temp2 = coordinates[1];
+                var Temp3 = coordinates[2];
+                var Temp4 = coordinates[3];
+                
+                if (Temp1[0] == 1) {
+                    context.drawImage(imgMole, Temp1[1], Temp1[2], 100, 100);
+                
+                }
+                
+                if (Temp2[0] == 1) {
+                    context.drawImage(imgChrome, Temp2[1], Temp2[2], 100, 100);
+                }
+                
+                if (Temp3[0] == 1) {
+                    context.drawImage(imgCB, Temp3[1], Temp3[2], 100, 100);
+                }
+                
+                if (Temp4[0] == -1) {
+                    context.drawImage(imgBomb, Temp4[1], Temp4[2], 100,100);
+                    console.log(Temp4);
+                }
+                
+                
+            }
+            var fail = false
+            function click(e) {
+                for (var i=0; i < 4; i++) {
+                    var temp1 = coordinates[i];
+                    console.log(temp1);
+                    if (temp1[0] == 1 && e.offsetX >= temp1[1] && e.offsetX <= temp1[1] + 100 && e.offsetY >= temp1[2] && e.offsetY <= temp1[2] + 100) {
+                        temp1[0] = 0;
+                        coordinates[i] = temp1;
+                        score++;
+                        console.log(score);
+                    }
+                    if (temp1[0] == -1 && e.offsetX >= temp1[1] && e.offsetX <= temp1[1] + 100 && e.offsetY >= temp1[2] && e.offsetY <= temp1[2] + 100) {
+                        console.log('it works');
+                        temp1[0] = 0;
+                        coordinates[i] = temp1;
+                        score = score - 1;    
+                    }
+                
+                
+                
+                    //console.log('it works');
+                }
+                    
+                    
+            
+                
+                context.clearRect(0,0,800,500)
+                context.drawImage(imgBG, 0,0,800,500);
+                drawall();
+                context.fillStyle = 'white';
+                context.font="30px Verdana" ;
+                context.fillText( 'Score:' + score, 45, 45);
+            
+            
+            }
+            
+            
+            /* function click(e) {
+                //generates coordinates of click
+                if (e.offsetX >= xcoor && e.offsetX <= xcoor + 50 && e.offsetY >= ycoor && e.offsetY <= ycoor + 45) { 
+                context.clearRect(xcoor, ycoor, xcoor + 50, ycoor + 45);
+                context.drawImage(imgBG, 0,0,800,500);
+                score ++;
+                context.fillStyle = 'white';
+                context.fillText( 'Score:' + score, 15, 15);
+            }
+                else {
+                context.fillStyle = 'white';
+                context.fillText( 'You missed!', e.offsetX, e.offsetY);
+            }
+            } */
+            
+            
+            
+            function draw(Temp) {
+                //takes coordinates and draws image there
+                var x = Temp[1];
+                var y = Temp[2];
+                
+                context.drawImage(imgBG, 0, 0, 800, 500) ;
+                context.drawImage(imgMole, x, y) ;
+                
+            }
+            
+            var run = setInterval(loop, 100);
+            
+        </script>
+    </body>
+</html>
